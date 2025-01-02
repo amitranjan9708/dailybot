@@ -1,16 +1,27 @@
 const Telegraf = require('telegraf').Telegraf;
+const express = require("express");
 const message = require('telegraf/filters').message;
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const eventSchema = require('./src/models/Event.js');
 const userModel = require('./src/models/User');
 const connectDb = require('./src/config/db.js');
-
+const app = express();
 require('dotenv').config();
 
+
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
 // Initialize the Google Generative AI client
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const bot = new Telegraf(process.env.BOT_TOKEN);
+
+
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
 
 try {
   connectDb();
